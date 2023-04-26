@@ -27,6 +27,7 @@ def listen_for_client(cs):
         try:
             # keep listening for a message from `cs` socket
             msg = cs.recv(1024).decode()
+            print(f"[msg] {msg.replace(separator_token}")
         except Exception as e:
             # client no longer connected
             # remove it from the set
