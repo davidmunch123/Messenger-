@@ -2,7 +2,12 @@ import socket
 import random
 from threading import Thread
 from datetime import datetime
-from colorama import Fore, init, Back
+from colorama import Fore, init, Back 
+
+with open("./keyfile.key", rb) as filekey: 
+    key = filekey.read() 
+    
+fernet = Fernet(key) 
 
 # init colors
 init()
@@ -35,7 +40,8 @@ name = input('What is your name: ")
 
 def listen_for_messages():
     while True:
-        message = s.recv(1024).decode()
+        message = s.recv(1024).decode() 
+        message = fernet.decrypt(message) 
         print("\n" + message)
 
 # make a thread that listens for messages to this client & print them
@@ -51,6 +57,7 @@ while True:
     date_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
     to_send = f"{client_color}[{date_now}] {name}{separator_token}{to_send}{Fore.RESET}"
     # finally, send the message
+    to_send = fernet.encrypt(to_send) 
     s.send(to_send.encode())
 
 # close the socket
