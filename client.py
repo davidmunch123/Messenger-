@@ -37,7 +37,7 @@ print(f"[*] Connecting to {SERVER_HOST}:{SERVER_PORT}...")
 s.connect((SERVER_HOST, SERVER_PORT))
 print("[+] Connected.")
 
-name = input('What is your name: ") 
+name = input('What is your name: ') 
 
 def listen_for_messages():
     while True:
