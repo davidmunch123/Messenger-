@@ -5,9 +5,9 @@ from datetime import datetime
 from colorama import Fore, init, Back 
 import rsa
 
-with open("./keyfile.key", rb) as filekey: 
+with open("./publickey.pem", rb) as filekey: 
     publickey = rsa.PublicKey.load_pkcs1(filekey.read())
-with open("./keyfile.key", rb) as filekey: 
+with open("./privatekey.pem", rb) as filekey: 
     privatekey = rsa.PrivateKey.load_pkcs1(filekey.read())
     
 
@@ -43,7 +43,7 @@ name = input('What is your name: ')
 def listen_for_messages():
     while True:
         message = s.recv(1024).decode() 
-        message = rsa.decrypt(message, key).decode('ascii') 
+        message = rsa.decrypt(message, privatekey).decode('ascii') 
         print("\n" + message)
 
 # make a thread that listens for messages to this client & print them
