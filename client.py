@@ -3,12 +3,13 @@ import random
 from threading import Thread
 from datetime import datetime
 from colorama import Fore, init, Back 
-from cyrptography.fernet import Fernet 
+import rsa
 
 with open("./keyfile.key", rb) as filekey: 
-    key = filekey.read() 
+    publickey = rsa.PublicKey.load_pkcs1(filekey.read())
+with open("./keyfile.key", rb) as filekey: 
+    privatekey = rsa.PrivateKey.load_pkcs1(filekey.read())
     
-fernet = Fernet(key) 
 
 # init colors
 init()
@@ -42,7 +43,7 @@ name = input('What is your name: ')
 def listen_for_messages():
     while True:
         message = s.recv(1024).decode() 
-        message = fernet.decrypt(message) 
+        message = rsa.decrypt(message, key).decode('ascii') 
         print("\n" + message)
 
 # make a thread that listens for messages to this client & print them
@@ -58,7 +59,7 @@ while True:
     date_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
     to_send = f"{client_color}[{date_now}] {name}{separator_token}{to_send}{Fore.RESET}"
     # finally, send the message
-    to_send = fernet.encrypt(bytes(to_send)) 
+    to_send = rsa.encrypt(str(to_send).encode('ascii'), publickey)
     s.send(to_send.encode())
 
 # close the socket
