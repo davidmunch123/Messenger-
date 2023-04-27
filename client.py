@@ -3,6 +3,7 @@ import random
 from threading import Thread
 from datetime import datetime
 from colorama import Fore, init, Back 
+from cyrptography.fernet import Fernet 
 
 with open("./keyfile.key", rb) as filekey: 
     key = filekey.read() 
@@ -57,7 +58,7 @@ while True:
     date_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
     to_send = f"{client_color}[{date_now}] {name}{separator_token}{to_send}{Fore.RESET}"
     # finally, send the message
-    to_send = fernet.encrypt(to_send) 
+    to_send = fernet.encrypt(bytes(to_send)) 
     s.send(to_send.encode())
 
 # close the socket
